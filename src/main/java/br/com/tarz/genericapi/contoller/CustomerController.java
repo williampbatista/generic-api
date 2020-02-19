@@ -29,9 +29,9 @@ public class CustomerController {
 	CustomerService service;
 
 	@GetMapping
-	public ResponseEntity<Page<CustomerResource>> get(Object filter, Pageable pageable) {
+	public Page<CustomerResource> get(Object filter, Pageable pageable) {
 		Page<CustomerResource> customers = service.findByFilter(filter, pageable);
-		return ResponseEntity.ok().body(customers);
+		return customers;
 	}
 
 	@GetMapping(value="/{id}")
