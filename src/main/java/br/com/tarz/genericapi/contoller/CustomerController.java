@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.tarz.genericapi.filter.CustomerFilter;
 import br.com.tarz.genericapi.resource.CustomerResource;
 import br.com.tarz.genericapi.service.CustomerService;
 
@@ -29,7 +30,7 @@ public class CustomerController {
 	CustomerService service;
 
 	@GetMapping
-	public Page<CustomerResource> get(Object filter, Pageable pageable) {
+	public Page<CustomerResource> get(CustomerFilter filter, Pageable pageable) {
 		Page<CustomerResource> customers = service.findByFilter(filter, pageable);
 		return customers;
 	}

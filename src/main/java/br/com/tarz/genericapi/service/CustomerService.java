@@ -1,50 +1,61 @@
 package br.com.tarz.genericapi.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import br.com.tarz.genericapi.converter.CustomerConverter;
+import br.com.tarz.genericapi.entity.Customer;
+import br.com.tarz.genericapi.filter.CustomerFilter;
+import br.com.tarz.genericapi.repository.CustomerRepository;
 import br.com.tarz.genericapi.resource.CustomerResource;
+import br.com.tarz.genericapi.specification.CustomerSpecification;
 
 @Service
 public class CustomerService {
 
-	public CustomerResource customerMok() {
-		return new CustomerResource(1, 2, "document", "personType", "name", "tradeName", "email");
-	}
-	
-	public List<CustomerResource> listCustomerMok(){
-		List<CustomerResource> list = new ArrayList<>();
-		for (int i = 0; i < 10; i++) {
-			list.add(customerMok());
-		}
-		return list;
-	}
+	@Autowired
+	private CustomerRepository repository;
 
 	public Iterable<CustomerResource> findAll() {
-		return listCustomerMok();
+		return CustomerConverter.toListDto(repository.findAll());
 	}
 
 	public Optional<CustomerResource> findOne(Integer id) {
-		return Optional.of(customerMok());
+		return CustomerConverter.toOptionalDto(repository.findById(id));
 	}
 
-	public Page<CustomerResource> findByFilter(Object filter, Pageable pageable) {
-		Page<CustomerResource> page = new PageImpl<>(listCustomerMok());
-		return page;
+	public Page<CustomerResource> findByFilter(CustomerFilter filter, Pageable pageable) {
+		return repository.findAll(getSpecification(filter), pageable).map(Customer -> CustomerConverter.toDto(Customer)); 
 	}
 
-	public CustomerResource save(CustomerResource resource) {
-		resource.setId(1);
-		return resource;
+	public CustomerResource save(CustomerResource dto){
+		return CustomerConverter.toDto(repository.save(CustomerConverter.toEntity(dto)));
 	}
-
+	
 	public void delete(Integer id) {
+		repository.deleteById(id);
+	}
+
+
+	private Specification<Customer> getSpecification(CustomerFilter filter) {
+		if (filter != null) {
+			Specification<Customer> spec = Specification.where((filter.getId() == null) ? null : CustomerSpecification.isNotNullId());
+			spec = (filter.getId() == null) ? spec : spec.and(CustomerSpecification.equalId(filter.getId()));
+			spec = (CollectionUtils.isEmpty(filter.getIds()) ? spec : spec.and(CustomerSpecification.inIds(filter.getIds())));
+			spec = (filter.getDocument() == null)  ? spec : spec.and(CustomerSpecification.equalDocument(filter.getDocument()));
+			spec = (StringUtils.isEmpty(filter.getName())) ? spec : spec.and(CustomerSpecification.likeName(filter.getName()));
+			spec = (StringUtils.isEmpty(filter.getTradeName())) ? spec : spec.and(CustomerSpecification.likeTradeName(filter.getTradeName()));			
+			
+			return spec;
+		}
+		return null;
 	}
 
 }
