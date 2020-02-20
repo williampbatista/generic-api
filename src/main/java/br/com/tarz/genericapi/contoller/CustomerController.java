@@ -1,6 +1,7 @@
 package br.com.tarz.genericapi.contoller;
 
 import java.net.URI;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -27,35 +28,37 @@ import br.com.tarz.genericapi.service.CustomerService;
 public class CustomerController {
 
 	@Autowired
-	CustomerService service;
+	private CustomerService service;
 
 	@GetMapping
-	public Page<CustomerResource> get(CustomerFilter filter, Pageable pageable) {
-		Page<CustomerResource> customers = service.findByFilter(filter, pageable);
-		return customers;
+	public ResponseEntity<Page<CustomerResource>> get(CustomerFilter filter, Pageable pageable) {	
+		Page<CustomerResource> customer = service.findByFilter(filter, pageable.previousOrFirst());
+		return ResponseEntity.ok().body(customer);
 	}
-
+	
 	@GetMapping(value="/{id}")
-	public ResponseEntity<CustomerResource> get(@PathVariable Integer id){
-		CustomerResource  resource = service.findOne(id).get();
-		return ResponseEntity.ok(resource);
+	public ResponseEntity<Optional<CustomerResource>> get(@PathVariable Integer id){
+		Optional<CustomerResource> customer = service.findOne(id);
+		return ResponseEntity.ok(customer);
 	}
 
 	@PostMapping
-	public ResponseEntity<CustomerResource> post(@Valid @RequestBody CustomerResource resource,
-			UriComponentsBuilder uriBuilder) {
-		resource.setId(1);
-		URI path = uriBuilder.path("/api/customer/{id}").buildAndExpand(resource.getId()).toUri();
-		return ResponseEntity.created(path).body(resource);
+	public ResponseEntity<CustomerResource> post(@Valid @RequestBody CustomerResource customer, UriComponentsBuilder uriBuilder){
+		customer = service.save(customer);
+		URI path = uriBuilder.path("/api/customer/{id}").buildAndExpand(customer.getId()).toUri();
+		return ResponseEntity.created(path).body(customer);
 	}
-
+	
 	@PutMapping("/{id}")
-	public ResponseEntity<CustomerResource> put(@RequestBody CustomerResource resource, @PathVariable Integer id) {
-		return ResponseEntity.ok().body(resource);
+	public ResponseEntity<CustomerResource> put(@RequestBody CustomerResource customer, @PathVariable Integer id){
+		customer.setId(id);
+		service.save(customer);
+		return ResponseEntity.ok().body(customer);
 	}
-
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Integer id) {
+		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
 
