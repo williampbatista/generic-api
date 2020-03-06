@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -14,7 +15,6 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.Id;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,8 +32,8 @@ public class Customer implements Serializable {
 	private static final long serialVersionUID = -4293378131082655393L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MPS_ENROLL_CUSTOMER_GEN")
-	@SequenceGenerator(name = "MPS_ENROLL_CUSTOMER_GEN", sequenceName = "MPS_ENROLL_CUSTOMER_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CUSTOMER_GEN")
+	@SequenceGenerator(name = "CUSTOMER_GEN", sequenceName = "CUSTOMER_SEQ", allocationSize = 1)
 	private Integer id;
 
 	@Column(nullable = false)
