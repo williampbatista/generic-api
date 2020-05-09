@@ -20,6 +20,10 @@ public class CustomerConverter {
 			dto.setName(entity.getName());
 			dto.setTradeName(entity.getTradeName());
 			dto.setEmail(entity.getEmail());
+			dto.setStatus(entity.getStatus());
+			dto.setCode(entity.getCode());
+			dto.setStatusId(entity.getStatus().getId());
+			dto.setStatusDesc(entity.getStatus().getDescricao());
 			return dto;
 		}
 		return null;
@@ -35,6 +39,8 @@ public class CustomerConverter {
 			entity.setEmail(dto.getEmail());
 			entity.setCreateDate(Calendar.getInstance().getTime());
 			entity.setUpdateDate(Calendar.getInstance().getTime());
+			entity.setStatus(dto.getStatus());
+			entity.setCode(dto.getCode());
 			return entity;
 		}
 		return null;

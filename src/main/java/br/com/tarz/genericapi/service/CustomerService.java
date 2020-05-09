@@ -43,7 +43,6 @@ public class CustomerService {
 		repository.deleteById(id);
 	}
 
-
 	private Specification<Customer> getSpecification(CustomerFilter filter) {
 		if (filter != null) {
 			Specification<Customer> spec = Specification.where((filter.getId() == null) ? null : CustomerSpecification.isNotNullId());
@@ -57,5 +56,6 @@ public class CustomerService {
 		}
 		return null;
 	}
+	
 
 }

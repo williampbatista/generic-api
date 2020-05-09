@@ -20,6 +20,10 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class Permission implements GrantedAuthority {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7897757976907612509L;
 	@Id
 	@NotBlank @Column(nullable = false, length = 50)
 	private String name;

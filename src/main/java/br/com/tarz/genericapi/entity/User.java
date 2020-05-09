@@ -29,6 +29,10 @@ import lombok.ToString;
 @ToString
 public class User implements UserDetails  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3733785951390492171L;
 
 	@Id
 	@GeneratedValue
