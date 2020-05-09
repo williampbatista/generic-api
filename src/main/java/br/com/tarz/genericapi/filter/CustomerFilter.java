@@ -1,5 +1,6 @@
 package br.com.tarz.genericapi.filter;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -26,5 +27,10 @@ public class CustomerFilter {
 	private String tradeName;
 	
 	private List<Integer> ids;
+	
+	private Date createDateBegin;
+	
+	private Date createDateEnd;
+	
 
 }

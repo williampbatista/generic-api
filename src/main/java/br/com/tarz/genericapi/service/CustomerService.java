@@ -50,7 +50,9 @@ public class CustomerService {
 			spec = (CollectionUtils.isEmpty(filter.getIds()) ? spec : spec.and(CustomerSpecification.inIds(filter.getIds())));
 			spec = (filter.getDocument() == null)  ? spec : spec.and(CustomerSpecification.equalDocument(filter.getDocument()));
 			spec = (StringUtils.isEmpty(filter.getName())) ? spec : spec.and(CustomerSpecification.likeName(filter.getName()));
-			spec = (StringUtils.isEmpty(filter.getTradeName())) ? spec : spec.and(CustomerSpecification.likeTradeName(filter.getTradeName()));			
+			spec = (StringUtils.isEmpty(filter.getTradeName())) ? spec : spec.and(CustomerSpecification.likeTradeName(filter.getTradeName()));	
+			spec = (filter.getCreateDateBegin() != null ? spec : spec.and(CustomerSpecification.createDateGreaterThanOrEqual(filter.getCreateDateBegin())));			
+			spec = (filter.getCreateDateEnd() != null ? spec : spec.and(CustomerSpecification.createDateLessThanOrEqual(filter.getCreateDateEnd())));			
 			
 			return spec;
 		}

@@ -1,5 +1,6 @@
 package br.com.tarz.genericapi.specification;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,6 +20,8 @@ public class CustomerSpecification {
 	private static final String DOCUMENT = "document";
 	private static final String NAME = "name";
 	private static final String TRADE_NAME = "trade_name";
+	private static final String CREATE_DATE = "createDate";
+	
 
 	public static Specification<Customer> isNotNullId() {
 		return new Specification<Customer>() {
@@ -71,6 +74,23 @@ public class CustomerSpecification {
 			@Override
 			public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				return cb.like(root.get(TRADE_NAME), StringUtils.join("%", tradeName, "%"));
+			}
+		};
+	}
+	
+	public static Specification<Customer> createDateLessThanOrEqual(Date date){
+		return new Specification<Customer>() {
+			@Override
+			public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				return cb.lessThanOrEqualTo(root.get(CREATE_DATE), date);
+			}
+		};
+	}
+	public static Specification<Customer> createDateGreaterThanOrEqual(Date date){
+		return new Specification<Customer>() {
+			@Override
+			public Predicate toPredicate(Root<Customer> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+				return cb.greaterThanOrEqualTo(root.get(CREATE_DATE), date);
 			}
 		};
 	}
